@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<!--
+  PROJECT TEMPLATE (a Personal Project — the "Wisdom" pillar).
+  A project is a long-running, real-world deliverable tied to a MISSION success
+  gate (e.g. ship a repo to GitHub, build & defend your own training program, run
+  a marathon). It runs IN PARALLEL with lessons and NEVER blocks lesson progress.
+  The teach skill copies this to projects/NNNN-slug/brief.html and fills it in.
+
+  AGENT, when generating a project (see .claude/rules/PROJECT-DESIGN.md):
+   1. Fill the BRIEF: goal, the concrete deliverable, why it matters (the mission
+      gate it satisfies), and the exercised sub-concept tags.
+   2. Set the ACCEPTANCE GATES — the definition of done, committed NOW like a
+      rubric. Each gate maps (via QUESTION_CONCEPTS) to the sub-concept slug(s) it
+      exercises; grading a check-in/delivery grades against these and feeds FSRS.
+   3. Set the META object (type:"project", number, title, date, deliverable, gates,
+      sub_concepts). Set QUESTION_CONCEPTS and RUBRICS (one-line 1-4 descriptors per
+      gate per sub-concept), exactly as for an exercise/exam.
+   4. The CHECK-IN form below is what the learner submits periodically AND at final
+      delivery: progress notes + evidence (a pasted repo URL, a photo, a logbook
+      export). Each gradeable field is a block with data-question="..." containing
+      ONE <textarea>. Configure file inputs to fit the evidence the subject needs.
+   5. Cite real-world references for the deliverable's shape. Never invent — research.
+  The Finish button bundles manifest.json + answers.md + any attached files into ONE
+  project-NNNN-<date>-submission.zip (self-contained zip writer, no libraries, file://).
+-->
+<html lang="{{LANG}}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{TITLE}}</title>
+<style>
+  :root{--ink:#1a1a2e;--accent:#e94560;--accent-soft:#fdeef1;--code-bg:#f6f8fa;
+        --border:#e1e4e8;--win:#1f7a4d;--win-soft:#e8f5ee;}
+  *{box-sizing:border-box;}
+  body{font-family:Georgia,'Times New Roman',serif;color:var(--ink);max-width:780px;
+       margin:0 auto;padding:2.5rem 1.5rem 6rem;line-height:1.7;font-size:1.05rem;}
+  h1,h2,h3,label,button{font-family:'Segoe UI',Helvetica,Arial,sans-serif;}
+  h1{font-size:1.8rem;border-bottom:3px solid var(--accent);padding-bottom:.5rem;line-height:1.25;}
+  h2{font-size:1.15rem;margin-top:2rem;}
+  .meta{font-size:.85rem;color:#666;margin-bottom:1.5rem;}
+  code{font-family:Consolas,monospace;background:var(--code-bg);padding:.1em .35em;border-radius:4px;font-size:.9em;}
+  pre{background:var(--code-bg);border:1px solid var(--border);border-left:4px solid var(--accent);
+      border-radius:6px;padding:1rem 1.2rem;overflow-x:auto;}
+  .brief{background:var(--accent-soft);border:1px solid var(--border);border-radius:10px;
+         padding:1.2rem 1.4rem;margin:1.5rem 0;}
+  .brief h2:first-child{margin-top:0;}
+  .deliverable{background:var(--win-soft);border-left:4px solid var(--win);border-radius:6px;
+               padding:.8rem 1.1rem;margin:1rem 0;}
+  .gates{margin:1rem 0;padding-left:1.2rem;}
+  .gates li{margin:.4rem 0;}
+  .tags{font-family:'Segoe UI',sans-serif;font-size:.8rem;color:#666;margin-top:1rem;}
+  .tags code{background:#fff;}
+  .q{margin:2rem 0;padding:1.2rem 1.4rem;border:1px solid var(--border);border-radius:10px;}
+  .q .tag{font-family:'Segoe UI',sans-serif;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;
+          color:#fff;background:var(--accent);border-radius:999px;padding:.15rem .6rem;}
+  .q .est{font-family:'Segoe UI',sans-serif;font-size:.8rem;color:#666;margin-left:.5rem;}
+  .q .prompt{margin:.8rem 0;}
+  .q .src{font-family:'Segoe UI',sans-serif;font-size:.8rem;color:#666;}
+  textarea{width:100%;min-height:7rem;font-family:Consolas,monospace;font-size:.92rem;padding:.7rem;
+           border:1px solid var(--border);border-radius:6px;resize:vertical;}
+  input[type=text]{width:100%;font-family:Consolas,monospace;font-size:.92rem;padding:.5rem;
+                   border:1px solid var(--border);border-radius:6px;}
+  .submit{background:#fff;border-top:2px solid var(--border);margin-top:3rem;padding:1.5rem 0;}
+  .submit .files{margin:.6rem 0;font-family:'Segoe UI',sans-serif;font-size:.9rem;}
+  .submit input[type=file]{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;}
+  .file-btn{display:inline-flex;align-items:center;gap:.45rem;font-family:'Segoe UI',sans-serif;font-weight:600;font-size:.9rem;
+            padding:.55rem 1.1rem;border:1px solid var(--accent);border-radius:8px;color:var(--accent);
+            background:var(--accent-soft);cursor:pointer;transition:filter .15s;}
+  .file-btn:hover{filter:brightness(.97);}
+  .file-name{margin-left:.6rem;font-family:'Segoe UI',sans-serif;font-size:.85rem;color:#666;}
+  button#finish{font-size:1.05rem;font-weight:600;padding:.7rem 1.6rem;color:#fff;background:var(--accent);
+                border:none;border-radius:8px;cursor:pointer;}
+  button#finish:hover{filter:brightness(1.08);}
+  #finish-status{margin-top:.8rem;font-family:'Segoe UI',sans-serif;font-size:.9rem;color:var(--win);}
+  a{color:var(--accent);}
+</style>
+</head>
+<body>
+
+<h1>{{TITLE}}</h1>
+<p class="meta">{{META_LINE}} · A personal project — a real deliverable you build over time, alongside your lessons. Log a check-in whenever you make progress, and submit again at final delivery.</p>
+
+<!-- ===== BRIEF (agent fills) ===== -->
+<div class="brief">
+  <h2>The goal</h2>
+  <p>{{GOAL_TEXT}}</p>
+
+  <div class="deliverable"><strong>Deliverable:</strong> {{DELIVERABLE_TEXT}}</div>
+
+  <h2>Why this matters</h2>
+  <p>{{WHY_TEXT}} <!-- the MISSION success gate this satisfies --></p>
+
+  <h2>Acceptance gates (definition of done)</h2>
+  <ul class="gates">
+    <li>{{GATE_1}}</li>
+    <li>{{GATE_2}}</li>
+    <!-- one <li> per acceptance gate; these are committed up front and graded against -->
+  </ul>
+
+  <h2>Check-in cadence</h2>
+  <p>{{CADENCE_TEXT}} <!-- e.g. "Log a check-in every ~2 weeks; final delivery when all gates are met." --></p>
+
+  <p class="tags">Exercises: <code>{{SLUG_A}}</code> <code>{{SLUG_B}}</code></p>
+</div>
+
+<!-- ===== CHECK-IN / DELIVERY (replace these samples) ===== -->
+<section class="q" data-question="g1" data-prompt="Sample: progress toward acceptance gate 1.">
+  <span class="tag">Gate 1</span><span class="est">progress &amp; evidence</span>
+  <p class="prompt">{{GATE_1_PROMPT}}</p>
+  <textarea placeholder="What you did toward this gate, decisions made, and why. Paste links (repo, log) here too."></textarea>
+  <p class="src">Reference: <a href="{{SOURCE_URL}}">{{SOURCE_NAME}}</a></p>
+</section>
+<!-- duplicate the <section> for g2..gN (one per acceptance gate) -->
+
+<!-- ===== SUBMISSION ===== -->
+<div class="submit">
+  <!-- AGENT: keep the deliverable URL input, plus one styled .zip input for evidence
+       (label.file-btn + hidden input#attach + span#attach-name). Change accept= / instruction
+       per subject, but keep the styled pattern. -->
+  <div class="files"><label>Deliverable URL (repo, doc, etc.): <input type="text" id="deliverable-url" placeholder="https://..."></label></div>
+  <div class="files">
+    <p>Bundle your evidence (photos/files/logs) into <strong>one .zip</strong> and attach it here:</p>
+    <label class="file-btn" for="attach">📎 Choose .zip</label>
+    <input id="attach" type="file" accept=".zip,application/zip,application/x-zip-compressed">
+    <span class="file-name" id="attach-name">No file chosen</span>
+  </div>
+  <button id="finish" onclick="finish()">Finish &amp; download check-in</button>
+  <div id="finish-status"></div>
+</div>
+
+<script>
+/* ===== AGENT FILLS THESE ===== */
+const META = {
+  type: "project",           // project (long-running, real-world deliverable)
+  number: 1,                 // artifact number (matches folder NNNN-slug)
+  title: "{{TITLE}}",
+  date: "{{DATE}}",          // YYYY-MM-DD the project was created
+  deliverable: "{{DELIVERABLE_TEXT}}",  // the concrete thing being built
+  gates: ["{{GATE_1}}","{{GATE_2}}"],   // acceptance gates (definition of done)
+  sub_concepts: ["{{SLUG_A}}"]          // all sub-concept slugs this project exercises
+};
+const QUESTION_CONCEPTS = {
+  g1: ["{{SLUG_A}}"]         // map each gate id -> sub-concept slug(s) it exercises
+};
+// RUBRICS: the grading standard, committed at build time. For each gate id, and
+// each sub-concept slug it exercises, give a one-line descriptor of what each grade
+// looks like FOR THIS GATE (1=Again, 2=Hard, 3=Good, 4=Easy). The grader grades a
+// check-in/delivery against these lines (quoting the matched one) instead of
+// re-improvising the standard.
+const RUBRICS = {
+  g1: {
+    "{{SLUG_A}}": {
+      "1": "{{what a 1/Again result looks like for this gate}}",
+      "2": "{{what a 2/Hard result looks like}}",
+      "3": "{{what a 3/Good result looks like}}",
+      "4": "{{what a 4/Easy result looks like}}"
+    }
+  }
+};
+/* ===== END AGENT SECTION ===== */
+
+/* ---- self-contained ZIP (store method) + CRC-32, no dependencies ---- */
+const CRC_TABLE = (() => {
+  const t = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) {
+    let c = n;
+    for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+    t[n] = c >>> 0;
+  }
+  return t;
+})();
+function crc32(bytes){
+  let crc = 0xFFFFFFFF;
+  for (let i = 0; i < bytes.length; i++) crc = (crc >>> 8) ^ CRC_TABLE[(crc ^ bytes[i]) & 0xFF];
+  return (crc ^ 0xFFFFFFFF) >>> 0;
+}
+function buildZip(files){
+  const enc = new TextEncoder();
+  const chunks = [], central = [];
+  let offset = 0;
+  for (const f of files){
+    const nameBytes = enc.encode(f.name);
+    const data = f.bytes;
+    const crc = crc32(data);
+    const lh = new DataView(new ArrayBuffer(30));
+    lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true); lh.setUint16(6, 0x0800, true);
+    lh.setUint16(8, 0, true); lh.setUint16(10, 0, true); lh.setUint16(12, 0, true);
+    lh.setUint32(14, crc, true); lh.setUint32(18, data.length, true); lh.setUint32(22, data.length, true);
+    lh.setUint16(26, nameBytes.length, true); lh.setUint16(28, 0, true);
+    chunks.push(new Uint8Array(lh.buffer), nameBytes, data);
+    const ch = new DataView(new ArrayBuffer(46));
+    ch.setUint32(0, 0x02014b50, true); ch.setUint16(4, 20, true); ch.setUint16(6, 20, true);
+    ch.setUint16(8, 0x0800, true); ch.setUint16(10, 0, true); ch.setUint16(12, 0, true); ch.setUint16(14, 0, true);
+    ch.setUint32(16, crc, true); ch.setUint32(20, data.length, true); ch.setUint32(24, data.length, true);
+    ch.setUint16(28, nameBytes.length, true); ch.setUint16(30, 0, true); ch.setUint16(32, 0, true);
+    ch.setUint16(34, 0, true); ch.setUint16(36, 0, true); ch.setUint32(38, 0, true); ch.setUint32(42, offset, true);
+    const chBytes = new Uint8Array(46 + nameBytes.length);
+    chBytes.set(new Uint8Array(ch.buffer), 0); chBytes.set(nameBytes, 46);
+    central.push(chBytes);
+    offset += 30 + nameBytes.length + data.length;
+  }
+  const centralSize = central.reduce((a, b) => a + b.length, 0);
+  const eocd = new DataView(new ArrayBuffer(22));
+  eocd.setUint32(0, 0x06054b50, true); eocd.setUint16(4, 0, true); eocd.setUint16(6, 0, true);
+  eocd.setUint16(8, files.length, true); eocd.setUint16(10, files.length, true);
+  eocd.setUint32(12, centralSize, true); eocd.setUint32(16, offset, true); eocd.setUint16(20, 0, true);
+  return new Blob([...chunks, ...central, new Uint8Array(eocd.buffer)], {type: "application/zip"});
+}
+
+async function finish(){
+  const enc = new TextEncoder();
+  const answers = [];
+  document.querySelectorAll('[data-question]').forEach(q => {
+    const ta = q.querySelector('textarea');
+    answers.push({
+      id: q.getAttribute('data-question'),
+      prompt: (q.querySelector('.prompt')?.textContent || q.getAttribute('data-prompt') || '').trim(),
+      answer: ta ? ta.value : '',
+      sub_concepts: QUESTION_CONCEPTS[q.getAttribute('data-question')] || []
+    });
+  });
+  const stamp = new Date().toISOString();
+  const deliverableUrl = (document.getElementById('deliverable-url')?.value || '').trim();
+  let md = `# ${META.title} — Check-in\n\n- Type: ${META.type}\n- Number: ${META.number}\n- Submitted: ${stamp}\n`;
+  if (deliverableUrl) md += `- Deliverable URL: ${deliverableUrl}\n`;
+  md += `\n`;
+  answers.forEach(a => { md += `## ${a.id}\n\n${a.prompt}\n\n**Progress:**\n\n${a.answer || '(blank)'}\n\n`; });
+
+  const files = [{name: "answers.md", bytes: enc.encode(md)}];
+  const attachments = [];
+  for (const inp of document.querySelectorAll('input[type=file]')){
+    for (const f of inp.files){
+      const bytes = new Uint8Array(await f.arrayBuffer());
+      const safe = f.name.replace(/[^A-Za-z0-9._-]/g, '_');
+      files.push({name: "attachments/" + safe, bytes});
+      attachments.push("attachments/" + safe);
+    }
+  }
+  const manifest = Object.assign({}, META, {submitted_at: stamp, deliverable_url: deliverableUrl,
+    questions: answers.map(a => ({id: a.id, sub_concepts: a.sub_concepts, rubric: RUBRICS[a.id] || null})), attachments});
+  files.unshift({name: "manifest.json", bytes: enc.encode(JSON.stringify(manifest, null, 2))});
+
+  const blob = buildZip(files);
+  const fname = `${META.type}-${String(META.number).padStart(4, "0")}-${META.date}-submission.zip`;
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = fname;
+  document.body.appendChild(a); a.click(); a.remove();
+  document.getElementById("finish-status").textContent =
+    `✓ Downloaded ${fname}. Now tell your tutor: “review my project check-in”.`;
+}
+
+/* show the chosen file name in the styled input */
+document.querySelectorAll('input[type=file]').forEach(inp => {
+  const out = document.getElementById(inp.id + '-name');
+  if (!out) return;
+  const empty = out.textContent;
+  inp.addEventListener('change', () => {
+    out.textContent = inp.files.length ? [...inp.files].map(f => f.name).join(', ') : empty;
+  });
+});
+</script>
+</body>
+</html>

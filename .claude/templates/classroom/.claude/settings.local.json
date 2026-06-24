@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(git *)",
+      "PowerShell(python *)",
+      "PowerShell(Expand-Archive *)",
+      "Bash(python *)",
+      "Bash(start chrome *)",
+      "Bash(start *)",
+      "Bash(ls *)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"SessionStart\",\"additionalContext\":\"This is a teaching CLASSROOM whose only purpose is the learner studying one subject. Before responding, invoke the teach-init skill to load the learner context (MISSION.md, NOTES.md, GLOSSARY.md, learning-records/, lessons/) and check the spaced-repetition schedule by running: python .claude/scripts/fsrs.py due . Act as their grounded tutor and obey .claude/rules/PEDAGOGY.md. If sub-concepts are due or there has been a long gap, propose a short review before new material.\"}}'"
+          }
+        ]
+      }
+    ]
+  }
+}

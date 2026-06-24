@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<!--
+  EXERCISE TEMPLATE (also the base for review.html and exam.html).
+  The teach skill copies this to exercises/NNNN-slug.html and fills it in.
+
+  AGENT, when generating an exercise:
+   1. Set the META object (type/number/title/date/lesson/sub_concepts) in the script below.
+   2. Set QUESTION_CONCEPTS: map each question id -> the sub-concept slug(s) it tests.
+      Grading reads this from the manifest to feed FSRS per sub-concept.
+   3. Set RUBRICS (REQUIRED): for each question id and each sub-concept it tests, write the
+      one-line 1-4 grade descriptors NOW, while the question's intent is fresh. Grading
+      grades against this committed rubric instead of improvising the standard at grade-time.
+   4. Replace the sample <section data-question="..."> blocks with your researched questions
+      (5 for an exercise; ~3-6 multi-part for an exam; cumulative recall for a review).
+      Each gradeable field is a block with data-question="qN" containing ONE <textarea>.
+      For multi-part exam questions, use separate blocks q1a, q1b, q1c...
+   5. Configure the submission inputs to fit the subject: keep typed textareas, and/or add
+      file inputs (a .ipynb upload, an image of handwritten work). See the .submit block.
+   6. Cite each question's source (link). Never invent questions — research first.
+  The Finish button bundles manifest.json + answers.md + any attached files into ONE
+  <type>-NNNN-<date>-submission.zip (self-contained zip writer, no libraries, works on file://).
+-->
+<html lang="{{LANG}}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{TITLE}}</title>
+<style>
+  :root{--ink:#1a1a2e;--accent:#e94560;--accent-soft:#fdeef1;--code-bg:#f6f8fa;
+        --border:#e1e4e8;--win:#1f7a4d;--win-soft:#e8f5ee;}
+  *{box-sizing:border-box;}
+  body{font-family:Georgia,'Times New Roman',serif;color:var(--ink);max-width:780px;
+       margin:0 auto;padding:2.5rem 1.5rem 6rem;line-height:1.7;font-size:1.05rem;}
+  h1,h2,h3,label,button{font-family:'Segoe UI',Helvetica,Arial,sans-serif;}
+  h1{font-size:1.8rem;border-bottom:3px solid var(--accent);padding-bottom:.5rem;line-height:1.25;}
+  .meta{font-size:.85rem;color:#666;margin-bottom:1.5rem;}
+  code{font-family:Consolas,monospace;background:var(--code-bg);padding:.1em .35em;border-radius:4px;font-size:.9em;}
+  pre{background:var(--code-bg);border:1px solid var(--border);border-left:4px solid var(--accent);
+      border-radius:6px;padding:1rem 1.2rem;overflow-x:auto;}
+  .q{margin:2rem 0;padding:1.2rem 1.4rem;border:1px solid var(--border);border-radius:10px;}
+  .q .tag{font-family:'Segoe UI',sans-serif;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;
+          color:#fff;background:var(--accent);border-radius:999px;padding:.15rem .6rem;}
+  .q .est{font-family:'Segoe UI',sans-serif;font-size:.8rem;color:#666;margin-left:.5rem;}
+  .q .prompt{margin:.8rem 0;}
+  .q .src{font-family:'Segoe UI',sans-serif;font-size:.8rem;color:#666;}
+  textarea{width:100%;min-height:7rem;font-family:Consolas,monospace;font-size:.92rem;padding:.7rem;
+           border:1px solid var(--border);border-radius:6px;resize:vertical;}
+  .submit{background:#fff;border-top:2px solid var(--border);margin-top:3rem;padding:1.5rem 0;}
+  .submit .files{margin:.6rem 0;font-family:'Segoe UI',sans-serif;font-size:.9rem;}
+  .submit input[type=file]{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;}
+  .file-btn{display:inline-flex;align-items:center;gap:.45rem;font-family:'Segoe UI',sans-serif;font-weight:600;font-size:.9rem;
+            padding:.55rem 1.1rem;border:1px solid var(--accent);border-radius:8px;color:var(--accent);
+            background:var(--accent-soft);cursor:pointer;transition:filter .15s;}
+  .file-btn:hover{filter:brightness(.97);}
+  .file-name{margin-left:.6rem;font-family:'Segoe UI',sans-serif;font-size:.85rem;color:#666;}
+  button#finish{font-size:1.05rem;font-weight:600;padding:.7rem 1.6rem;color:#fff;background:var(--accent);
+                border:none;border-radius:8px;cursor:pointer;}
+  button#finish:hover{filter:brightness(1.08);}
+  #finish-status{margin-top:.8rem;font-family:'Segoe UI',sans-serif;font-size:.9rem;color:var(--win);}
+  a{color:var(--accent);}
+</style>
+</head>
+<body>
+
+<h1>{{TITLE}}</h1>
+<p class="meta">{{META_LINE}} · Work each question yourself; aim for the time shown. When done, click Finish.</p>
+
+<!-- ===== QUESTIONS (replace these samples) ===== -->
+<section class="q" data-question="q1" data-prompt="Sample: state the question prompt here.">
+  <span class="tag">Q1</span><span class="est">~5–10 min</span>
+  <p class="prompt">{{QUESTION_1_TEXT}}</p>
+  <textarea placeholder="Your answer / working..."></textarea>
+  <p class="src">Source: <a href="{{SOURCE_URL}}">{{SOURCE_NAME}}</a></p>
+</section>
+<!-- duplicate the <section> for q2..q5 (and use file inputs where the work is a notebook/photo) -->
+
+<!-- ===== SUBMISSION ===== -->
+<div class="submit">
+  <!-- AGENT: the learner attaches ONE .zip with all photos/files for their answers. Keep this
+       single styled .zip input (label.file-btn + hidden input#attach + span#attach-name). If the
+       subject needs a different artifact, change accept= and the instruction text, but keep the
+       styled pattern. -->
+  <div class="files">
+    <p>Bundle all photos/files for your answers into <strong>one .zip</strong> and attach it here:</p>
+    <label class="file-btn" for="attach">📎 Choose .zip</label>
+    <input id="attach" type="file" accept=".zip,application/zip,application/x-zip-compressed">
+    <span class="file-name" id="attach-name">No file chosen</span>
+  </div>
+  <button id="finish" onclick="finish()">Finish &amp; download submission</button>
+  <div id="finish-status"></div>
+</div>
+
+<script>
+/* ===== AGENT FILLS THESE ===== */
+const META = {
+  type: "exercise",          // exercise | review | exam
+  number: 1,                 // artifact number (matches filename NNNN)
+  title: "{{TITLE}}",
+  lesson: 1,                 // lesson this pairs with (exercises only)
+  date: "{{DATE}}",          // YYYY-MM-DD the artifact was generated
+  sub_concepts: ["{{SLUG_A}}"]   // all sub-concept slugs this artifact covers
+};
+const QUESTION_CONCEPTS = {
+  q1: ["{{SLUG_A}}"]         // map each question id -> sub-concept slug(s) it tests
+};
+// RUBRICS: the grading standard, committed at build time. For each question id, and
+// each sub-concept slug it tests, give a one-line descriptor of what each grade looks
+// like FOR THIS SPECIFIC QUESTION (1=Again, 2=Hard, 3=Good, 4=Easy). The grader grades
+// against these lines (quoting the matched one) instead of re-improvising the standard.
+const RUBRICS = {
+  q1: {
+    "{{SLUG_A}}": {
+      "1": "{{what a 1/Again answer looks like for this question}}",
+      "2": "{{what a 2/Hard answer looks like}}",
+      "3": "{{what a 3/Good answer looks like}}",
+      "4": "{{what a 4/Easy answer looks like}}"
+    }
+  }
+};
+/* ===== END AGENT SECTION ===== */
+
+/* ---- self-contained ZIP (store method) + CRC-32, no dependencies ---- */
+const CRC_TABLE = (() => {
+  const t = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) {
+    let c = n;
+    for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+    t[n] = c >>> 0;
+  }
+  return t;
+})();
+function crc32(bytes){
+  let crc = 0xFFFFFFFF;
+  for (let i = 0; i < bytes.length; i++) crc = (crc >>> 8) ^ CRC_TABLE[(crc ^ bytes[i]) & 0xFF];
+  return (crc ^ 0xFFFFFFFF) >>> 0;
+}
+function buildZip(files){
+  const enc = new TextEncoder();
+  const chunks = [], central = [];
+  let offset = 0;
+  for (const f of files){
+    const nameBytes = enc.encode(f.name);
+    const data = f.bytes;
+    const crc = crc32(data);
+    const lh = new DataView(new ArrayBuffer(30));
+    lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true); lh.setUint16(6, 0x0800, true);
+    lh.setUint16(8, 0, true); lh.setUint16(10, 0, true); lh.setUint16(12, 0, true);
+    lh.setUint32(14, crc, true); lh.setUint32(18, data.length, true); lh.setUint32(22, data.length, true);
+    lh.setUint16(26, nameBytes.length, true); lh.setUint16(28, 0, true);
+    chunks.push(new Uint8Array(lh.buffer), nameBytes, data);
+    const ch = new DataView(new ArrayBuffer(46));
+    ch.setUint32(0, 0x02014b50, true); ch.setUint16(4, 20, true); ch.setUint16(6, 20, true);
+    ch.setUint16(8, 0x0800, true); ch.setUint16(10, 0, true); ch.setUint16(12, 0, true); ch.setUint16(14, 0, true);
+    ch.setUint32(16, crc, true); ch.setUint32(20, data.length, true); ch.setUint32(24, data.length, true);
+    ch.setUint16(28, nameBytes.length, true); ch.setUint16(30, 0, true); ch.setUint16(32, 0, true);
+    ch.setUint16(34, 0, true); ch.setUint16(36, 0, true); ch.setUint32(38, 0, true); ch.setUint32(42, offset, true);
+    const chBytes = new Uint8Array(46 + nameBytes.length);
+    chBytes.set(new Uint8Array(ch.buffer), 0); chBytes.set(nameBytes, 46);
+    central.push(chBytes);
+    offset += 30 + nameBytes.length + data.length;
+  }
+  const centralSize = central.reduce((a, b) => a + b.length, 0);
+  const eocd = new DataView(new ArrayBuffer(22));
+  eocd.setUint32(0, 0x06054b50, true); eocd.setUint16(4, 0, true); eocd.setUint16(6, 0, true);
+  eocd.setUint16(8, files.length, true); eocd.setUint16(10, files.length, true);
+  eocd.setUint32(12, centralSize, true); eocd.setUint32(16, offset, true); eocd.setUint16(20, 0, true);
+  return new Blob([...chunks, ...central, new Uint8Array(eocd.buffer)], {type: "application/zip"});
+}
+
+async function finish(){
+  const enc = new TextEncoder();
+  const answers = [];
+  document.querySelectorAll('[data-question]').forEach(q => {
+    const ta = q.querySelector('textarea');
+    answers.push({
+      id: q.getAttribute('data-question'),
+      prompt: (q.querySelector('.prompt')?.textContent || q.getAttribute('data-prompt') || '').trim(),
+      answer: ta ? ta.value : '',
+      sub_concepts: QUESTION_CONCEPTS[q.getAttribute('data-question')] || []
+    });
+  });
+  const stamp = new Date().toISOString();
+  let md = `# ${META.title} — Answers\n\n- Type: ${META.type}\n- Number: ${META.number}\n- Submitted: ${stamp}\n\n`;
+  answers.forEach(a => { md += `## ${a.id}\n\n${a.prompt}\n\n**Answer:**\n\n${a.answer || '(blank)'}\n\n`; });
+
+  const files = [{name: "answers.md", bytes: enc.encode(md)}];
+  const attachments = [];
+  for (const inp of document.querySelectorAll('input[type=file]')){
+    for (const f of inp.files){
+      const bytes = new Uint8Array(await f.arrayBuffer());
+      const safe = f.name.replace(/[^A-Za-z0-9._-]/g, '_');
+      files.push({name: "attachments/" + safe, bytes});
+      attachments.push("attachments/" + safe);
+    }
+  }
+  const manifest = Object.assign({}, META, {submitted_at: stamp,
+    questions: answers.map(a => ({id: a.id, sub_concepts: a.sub_concepts, rubric: RUBRICS[a.id] || null})), attachments});
+  files.unshift({name: "manifest.json", bytes: enc.encode(JSON.stringify(manifest, null, 2))});
+
+  const blob = buildZip(files);
+  const fname = `${META.type}-${String(META.number).padStart(4, "0")}-${META.date}-submission.zip`;
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = fname;
+  document.body.appendChild(a); a.click(); a.remove();
+  document.getElementById("finish-status").textContent =
+    `✓ Downloaded ${fname}. Now tell your tutor: “review my answers”.`;
+}
+
+/* show the chosen file name in the styled input */
+document.querySelectorAll('input[type=file]').forEach(inp => {
+  const out = document.getElementById(inp.id + '-name');
+  if (!out) return;
+  const empty = out.textContent;
+  inp.addEventListener('change', () => {
+    out.textContent = inp.files.length ? [...inp.files].map(f => f.name).join(', ') : empty;
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<!--
+  LESSON TEMPLATE. The teach skill copies this to lessons/NNNN-slug.html and fills it in.
+  AGENT, when generating a lesson:
+   - Replace {{LANG}}, {{TITLE}}, {{META_LINE}}, {{GOAL}}, and the body sections.
+   - Teach ONE thing tied to the mission. Cite every claim (link to a RESOURCES.md source).
+   - Keep the .practice note; adapt it to the subject.
+   - Optional: include one or more .quiz self-checks (light recall only; real work is the exercise).
+   - End with the .next block linking to this lesson's exercise (exercises/NNNN-slug.html).
+   - Remember to also run: fsrs.py add  for each sub-concept this lesson introduces.
+-->
+<html lang="{{LANG}}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{TITLE}}</title>
+<style>
+  :root{
+    --ink:#1a1a2e; --accent:#e94560; --accent-soft:#fdeef1;
+    --code-bg:#f6f8fa; --border:#e1e4e8; --win:#1f7a4d; --win-soft:#e8f5ee;
+  }
+  *{box-sizing:border-box;}
+  body{font-family:Georgia,'Times New Roman',serif;color:var(--ink);max-width:760px;
+       margin:0 auto;padding:2.5rem 1.5rem 5rem;line-height:1.7;font-size:1.05rem;}
+  h1,h2,h3{font-family:'Segoe UI',Helvetica,Arial,sans-serif;line-height:1.25;}
+  h1{font-size:1.9rem;border-bottom:3px solid var(--accent);padding-bottom:.5rem;}
+  h2{font-size:1.4rem;margin-top:2.5rem;color:var(--accent);}
+  .meta{font-family:'Segoe UI',sans-serif;font-size:.85rem;color:#666;margin-bottom:2rem;}
+  code{font-family:Consolas,'Courier New',monospace;background:var(--code-bg);
+       padding:.1em .35em;border-radius:4px;font-size:.9em;}
+  pre{background:var(--code-bg);border:1px solid var(--border);border-left:4px solid var(--accent);
+      border-radius:6px;padding:1rem 1.2rem;overflow-x:auto;line-height:1.5;}
+  pre code{background:none;padding:0;}
+  .win{background:var(--win-soft);border-left:4px solid var(--win);padding:.9rem 1.2rem;
+       border-radius:6px;margin:1.5rem 0;}
+  .note,.practice{background:var(--accent-soft);border-left:4px solid var(--accent);
+       padding:.9rem 1.2rem;border-radius:6px;margin:1.5rem 0;font-size:.95rem;}
+  .quiz{margin:1.2rem 0;padding:1rem 1.2rem;border:1px solid var(--border);border-radius:8px;}
+  .quiz p{margin-top:0;font-weight:bold;font-family:'Segoe UI',sans-serif;font-size:.98rem;}
+  .quiz button{display:block;width:100%;text-align:left;margin:.4rem 0;padding:.55rem .9rem;
+       font-family:Consolas,monospace;font-size:.92rem;background:#fff;border:1px solid var(--border);
+       border-radius:6px;cursor:pointer;}
+  .quiz button:hover{border-color:var(--accent);}
+  .quiz button.correct{background:var(--win-soft);border-color:var(--win);}
+  .quiz button.wrong{background:var(--accent-soft);border-color:var(--accent);}
+  .quiz .feedback{font-size:.9rem;margin-top:.6rem;display:none;font-family:'Segoe UI',sans-serif;}
+  .next{margin-top:3rem;padding:1.1rem 1.3rem;border:2px solid var(--accent);border-radius:8px;
+        font-family:'Segoe UI',sans-serif;font-size:.95rem;}
+  a{color:var(--accent);}
+  @media print{.quiz button{border:1px solid #999;} body{font-size:11pt;}}
+</style>
+</head>
+<body>
+
+<h1>{{TITLE}}</h1>
+<p class="meta">{{META_LINE}}</p>
+
+<p><strong>What you'll be able to do:</strong> {{GOAL}}</p>
+
+<div class="practice">
+<strong>How to practise:</strong> {{PRACTICE_NOTE}} Type the code/work yourself —
+don't copy-paste. Your fingers need to know the path.
+</div>
+
+<!-- AGENT: teaching sections go here. Cite every claim, e.g.
+<h2>1. {{HEADING}}</h2>
+<p>... <a href="{{SOURCE_URL}}">{{SOURCE_NAME}}</a>.</p>
+<pre><code>...</code></pre>
+-->
+
+<!-- Optional self-check (light recall). Duplicate the block per question.
+<div class="quiz">
+  <p>{{QUIZ_QUESTION}}</p>
+  <button onclick="pick(this,false)">{{WRONG_OPTION}}</button>
+  <button onclick="pick(this,true)">{{RIGHT_OPTION}}</button>
+  <div class="feedback">{{FEEDBACK}}</div>
+</div>
+-->
+
+<div class="next">
+<strong>Your turn:</strong> open this lesson's exercise
+(<a href="../exercises/{{EXERCISE_FILE}}">{{EXERCISE_FILE}}</a>) and do the 5 questions.
+Stuck on anything here? Ask your tutor — that's what they're for.
+</div>
+
+<script>
+function pick(btn, correct){
+  const box = btn.closest('.quiz');
+  box.querySelectorAll('button').forEach(b=>b.disabled=true);
+  btn.classList.add(correct?'correct':'wrong');
+  box.querySelector('.feedback').style.display='block';
+}
+</script>
+</body>
+</html>

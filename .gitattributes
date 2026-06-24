@@ -1,0 +1,21 @@
+# Normalize all text files to LF in the repository; Git checks them out with the
+# platform's native line endings. This keeps diffs clean across machines and
+# silences the LF/CRLF warnings on Windows.
+* text=auto eol=lf
+
+# Be explicit for the file types the harness ships.
+*.py    text eol=lf
+*.md    text eol=lf
+*.html  text eol=lf
+*.json  text eol=lf
+*.txt   text eol=lf
+
+# Binary files Git should never touch (none ship today, but future-proof so a
+# learner's attached artifacts aren't corrupted by EOL conversion).
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.pdf   binary
+*.zip   binary
+*.ipynb binary

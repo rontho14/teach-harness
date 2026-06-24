@@ -1,0 +1,4 @@
+# This repository is the learning-harness itself. Learners version ONLY the
+# harness; the classrooms they generate (one top-level folder per subject, each
+# with its own lessons/, exercises/, reviews/, exams/, PROGRESS.md, course.json,
+# fsrs-state.json, and a copied .claude bundle) stay local and are never pushed.
