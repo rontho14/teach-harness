@@ -72,3 +72,7 @@ o que você provavelmente está esquecendo.
 O motor FSRS é Python puro, sem dependências (`python .claude/scripts/fsrs.py
 selftest` para fazer um teste de sanidade). Todo o resto é Markdown e HTML legível —
 abra, leia e ajuste como quiser.
+
+## Agradecimentos
+
+Um agradecimento especial a [Matt Pocock](https://github.com/mattpocock) pela inspiração e criação das sensacionais skills `/teach` e `/grill-me`.
